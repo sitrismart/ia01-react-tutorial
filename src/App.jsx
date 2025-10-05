@@ -108,9 +108,17 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} winningLine={result?.line} />
       </div>
       <div className="game-info">
-         <button onClick={() => setIsAscending(!isAscending)}>
-          Sort {isAscending ? "Descending" : "Ascending"}
-        </button>
+         <label className="toggle-switch">
+          <input
+            type="checkbox"
+            checked={isAscending}
+            onChange={() => setIsAscending(!isAscending)}
+          />
+          <span className="slider" />
+          <span className="label-text">
+            {isAscending ? "Ascending" : "Descending"}
+          </span>
+        </label>
         <ol>{isAscending ? moves : moves.slice().reverse()}</ol>
       </div>
     </div>
