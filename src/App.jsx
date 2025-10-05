@@ -1,14 +1,14 @@
 import { useState } from 'react';
 
-function Square({ value, onSquareClick }) {
+function Square({ value, onSquareClick, highlight }) {
   return (
-    <button className="square" onClick={onSquareClick}>
+    <button className={`square ${highlight ? "highlight" : ""}`} onClick={onSquareClick}>
       {value}
     </button>
   );
 }
 
-function Board({ xIsNext, squares, onPlay, winningSquares }) {
+function Board({ xIsNext, squares, onPlay, winningLine }) {
   function handleClick(i) {
     if (squares[i] || calculateWinner(squares)) {
       return;
@@ -22,10 +22,12 @@ function Board({ xIsNext, squares, onPlay, winningSquares }) {
     onPlay(nextSquares);
   }
 
-  const winner = calculateWinner(squares);
+  const result = calculateWinner(squares);
   let status;
-  if (winner) {
-    status = "Winner: " + winner;
+  if (result) {
+    status = "Winner: " + result.winner;
+  } else if (!squares.includes(null)) {
+    status = "Draw!";
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
@@ -40,7 +42,7 @@ function Board({ xIsNext, squares, onPlay, winningSquares }) {
           key={index}
           value={squares[index]}
           onSquareClick={() => handleClick(index)}
-          highlight={winningSquares?.includes(index)}
+          highlight={result?.line.includes(index)}
         />
       );
     }
@@ -92,10 +94,12 @@ export default function Game() {
     );
   });
 
+  const result = calculateWinner(currentSquares);
+
   return (
     <div className="game">
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} winningLine={result?.line} />
       </div>
       <div className="game-info">
          <button onClick={() => setIsAscending(!isAscending)}>
@@ -121,7 +125,7 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return { winner: squares[a], line: [a, b, c]};
     }
   }
   return null;

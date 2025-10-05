@@ -88,3 +88,7 @@ body {
 .game-info {
   margin-left: 20px;
 }
+
+.square.highlight {
+  background-color: yellow;
+}
