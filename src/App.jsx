@@ -8,7 +8,7 @@ function Square({ value, onSquareClick, highlight }) {
   );
 }
 
-function Board({ xIsNext, squares, onPlay, winningLine }) {
+function Board({ xIsNext, squares, onPlay }) {
   function handleClick(i) {
     if (squares[i] || calculateWinner(squares)) {
       return;
@@ -83,7 +83,7 @@ export default function Game() {
     setCurrentMove(nextMove);
   }
 
-  const moves = history.map((squares, move) => {
+  const moves = history.map((_, move) => {
     let description;
     if (move > 0) {
       const location = moveLocations[move - 1];
@@ -100,12 +100,10 @@ export default function Game() {
     );
   });
 
-  const result = calculateWinner(currentSquares);
-
   return (
     <div className="game">
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} winningLine={result?.line} />
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
          <label className="toggle-switch">
